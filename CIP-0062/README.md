@@ -341,7 +341,7 @@ The [Signed Delegation Metadata](#signeddelegationmetadata) of the voter registr
 1. The dApp collects the users voting choices for a particular voting proposal.
 2. The dApp submits that choice through [api.signVotes](#apisignvotesvotes-vote-promisebytes) which confirms the votes with the user, and signs them.
 
-![Diagram: Sequence of vote casting](vote-cast-flow.png)
+![Diagram: Potential sequence of vote casting](vote-cast-flow.png)
 
 ## **Test Vectors**
 
