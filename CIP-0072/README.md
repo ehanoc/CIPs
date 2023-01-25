@@ -399,7 +399,7 @@ The Dapp Registration certificate itself doesn't enforce a particular structure 
 ```
 
 ### **Scripts Audits**
-As part of the metadata we will be including a list of audits for each script. This will be a list of audits that have been performed on the script. The audits will be performed by a third party auditor and will be signed by the auditor. 
+As part of the metadata we will be including a list of audits for each DApp. This will be a list of audits that have been performed on the deployed scripts comprising the DApp. The audits will be performed by a third party auditor and will be signed by the auditor. 
 
 Some of the properties included in the audit are:
 
