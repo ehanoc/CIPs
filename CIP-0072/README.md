@@ -417,9 +417,11 @@ Each store might have their own requirements for the metadata. For example, some
 
 ## Rationale
 
-TODO: add justification for design elements + related works + alternative designs + community concerns
+TODO: add justification for design elements + related works + community concerns
 
-By placing the necessity of publisher trust on an entity which is not the client is an important design element. This proxy of trust allows clients to aggregate and choose which claims they will trust.
+By placing the necessity of publisher trust on an entity which is not the client is an important design element. This proxy of trust allows clients to aggregate and choose which claims they will trust in a landscape of competing claims. Allowing multiple claims for the same subject is advantageous; this affords clients choice and facilities a market of competing claims. This allows different actors to attach their own metadata to subjects and clients can filter between the actors they trust. A client may trust security-based metadata claims from an auditor while also trusting the functionality claims to a made by the subject's author.
+
+[CIP-26](https://github.com/cardano-foundation/CIPs/tree/master/CIP-0026) follows a very similar approach to this proposal, this proposal employs a few distich differences. Here we include a hash of the off-chain data in the on-chain claim; this allows the assertion of the correctness of the metadata. Although this adds, this does complicate updates to the off-chain metadata, for [CIP-26](https://github.com/cardano-foundation/CIPs/tree/master/CIP-0026) updates can be made easily without any on-chain linkage. But because this proposal anchors the off-chain data in to the on-chain claim, any alterations to the off-chain data require a new claim to be made.
 
 This proposal partly addresses the problem layed out in [CPS-01 (Metadata Discoverability and Trust)](https://github.com/cardano-foundation/CIPs/pull/371). Outlined here is; how off-chain metadata can be associated with dApps, how such metadata can be discovered, how the correctness of metadata claims can be verified.
 
