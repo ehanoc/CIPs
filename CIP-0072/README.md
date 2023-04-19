@@ -76,10 +76,9 @@ The on-chain dApp registration certificate MUST follow canonical JSON and be ser
 
 *`type`*: The type of the claim. This is a JSON object that contains the following properties: 
 - *`action`*: The action that the certificate is asserting. It can take the following values: 
-  - *`REGISTER`*: The certificate is asserting that the dApp is being registered for the first time. 
-  - *`UPDATE`*: The certificate is asserting that the dApp is being updated.
-  - *`DE_REGISTER`*: The certificate is asserting that the dApp version is being removed and it is requested that stores no longer show it.
-  - *`DE_REGISTER_ALL`*: The certificate is asserting that the DApp's development is stopped, and it is depricated.So, no futher DApp's on-chain updats are expected.
+  - *`REGISTER`*: The certificate is asserting that the dApp is registered for the first time or is providing an update.
+  - *`DE_REGISTER_RELEASE`*: The certificate is asserting that the dApp release version is being removed and it is requested that stores no longer show it.
+  - *`DE_REGISTER_DAPP`*: The certificate is asserting that the dApp's development is stopped, and it is deprecated. So, no further dApp's on-chain update is expected.
 
 *`rootHash`*: The hash of the entire offchain metadata tree object. This hash is used by clients to verify the integrity of the metadata tree object. When reading a metadata tree object, the client should calculate the hash of the object and compare it with the `rootHash` property. If the two hashes don't match, the client should discard the object. The metadata tree object is a JSON object that contains the dApp's metadata. The metadata tree object is described in the next section. Please note that off-chain JSON must be converted into RFC 8765 canonical form before taking the hash!
 
@@ -125,18 +124,14 @@ The on-chain dApp registration certificate MUST follow canonical JSON and be ser
          "properties":{
             "action":{
               "type":"string",
-              "enum":["REGISTER", "UPDATE", "DE_REGISTER", "DE_REGISTER_ALL"],
-              "description":"Describes the action this certificate is claiming. I.e 'REGISTER', for a new dapp; 'UPDATE' for a new release or 'DE_REGISTER' for dApp version de-listing request and DE_REGISTER_ALL if a dApp developer wants to de-register all dApp versions in one call."
+              "enum":["REGISTER", "DE_REGISTER_RELEASE", "DE_REGISTER_DAPP"],
+              "description":"Describes the action this certificate is claiming. I.e 'REGISTER', for a new dApp or an update; 'DE_REGISTER_RELEASE', for dApp release version de-listing request; `DE_REGISTER_DAPP`, for asserting that the dApp's development is stopped, and it is deprecated. So, no further dApp's on-chain update is expected."
             },
             "releaseNumber":{
                "type":"string",
                "description":"An official version of the release following semver format (major.minor.patch).",
                "pattern": "(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(-[a-zA-Z\\d][-a-zA-Z.\\d]*)?(\\+[a-zA-Z\\d][-a-zA-Z.\\d]*)?"
             },
-            "releaseName":{
-               "type":"string",
-               "description":"An optional dApp release name."
-            }
          },
          "required":[
             "action",
@@ -199,7 +194,7 @@ The dApp Registration certificate itself doesn't enforce a particular structure 
   "properties": {
     "subject": {
       "type":"string",
-      "description": "A subject, it must match with subject stored on chain data."
+      "description": "A subject, it must match with subject stored on chain data. A UTF-8 encoded string, max 64 chars"
     },
     "projectName": {
       "type":"string",
@@ -501,10 +496,10 @@ languages on Cardano being worked on where they already allow one validator to b
 
 ### Parametrised Scripts
 On Cardano, there are parametrised scripts, meaning that before compilation takes place, it is possible to pass certain parameters instead of using `Datum`.
-The consequence of this will be that as we pass different parameters, script hash will be changing. This is especially troublesome for things like certifications / audits but also dApp registration. This topic is being debated as part of CIP: https://github.com/cardano-foundation/CIPs/pull/385, however, it doesn't seem that there has been conclusion how to tackle this problem. For the moment, a new script hash (despite changing only a parameter) requires a re REGISTRATION or an UPDATE to the existing dApp.
+The consequence of this will be that as we pass different parameters, script hash will be changing. This is especially troublesome for things like certifications / audits but also dApp registration. This topic is being debated as part of CIP: https://github.com/cardano-foundation/CIPs/pull/385, however, it doesn't seem that there has been conclusion how to tackle this problem. For the moment, a new script hash (despite changing only a parameter) requires a re REGISTRATION to the existing dApp.
 
 ### Often Changing Scripts
-There are cases on Cardano main-net that script hashes are changing every day, most probably due to parameterised scripts. It is responsibility of the developers to issue an `UPDATE` command and provide on-chain and off-chain metadata following the change, for scripts that are changing daily / hourly it is envisaged that this process be automated by a dApp developer.
+There are cases on Cardano main-net that script hashes are changing every day, most probably due to parameterised scripts. It is responsibility of the developers to issue an `REGISTRATION` command and provide on-chain and off-chain metadata following the change, for scripts that are changing daily / hourly it is envisaged that this process be automated by a dApp developer.
 
 ### Beacon Tokens Instead of Metadata
 It has been argued that since anybody can make claims to dApps, this CIP instead of using metadata should use tokens. dApp developers
@@ -530,7 +525,7 @@ propagated in the on-chain JSON itself.
 We briefly discussed tags and we will likely introduce tags in the near future. An array of tags to help stores / dApp developers categories where their dApp should show. This will complement `categories` field.
 
 ### DE_REGISTER
-We added DE_REGISTER and DE_REGISTER_ALL in additon to already existing `REGISTER` and `UPDATE`. The idea is that once dApp devs do not want their dApp version to be shown, they can now unlist a whole dApp or a dApp version and stores should respect such a request.
+We added DE_REGISTER_RELEASE and DE_REGISTER_DAPP in additon to already existing `REGISTER`. The idea is that once dApp devs do not want their dApp release version to be shown, they can now unlist a dApp release version or a whole dApp and stores should respect such a request.
 
 ### Type Field
 `Type` field can be `PLUTUS` or `NATIVE`, we made it optional and there are already two dApps at least on Cardano at the time of writing, which are only using NATIVE scripts. This optional field helps to differentiante between NATIVE script based and NON_NATIVE dApps.
